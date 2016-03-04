@@ -404,6 +404,13 @@ class MailAlerts extends Module
 			'{message}' => $message
 		);
 
+		foreach(Customer::$definition['fields'] as $key => $value) {
+			if(!isset($customer->$key)) {
+				continue;
+			}
+			$template_vars['{customer_'.$key.'}'] = $customer->$key;
+		}
+
 		// Shop iso
 		$iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
 
@@ -785,6 +792,13 @@ class MailAlerts extends Module
 			'{message}' => Tools::purifyHTML($params['orderReturn']->question),
 		);
 
+		foreach(Customer::$definition['fields'] as $key => $value) {
+			if(!isset($customer->$key)) {
+				continue;
+			}
+			$template_vars['{customer_'.$key.'}'] = $customer->$key;
+		}
+
 		// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
 		$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->merchant_mails);
 		foreach ($merchant_mails as $merchant_mail)
@@ -855,6 +869,14 @@ class MailAlerts extends Module
 			'{id_order}' => (int)$order->id,
 			'{order_name}' => $order->getUniqReference()
 		);
+
+		$customer = $order->getCustomer();
+		foreach(Customer::$definition['fields'] as $key => $value) {
+			if(!isset($customer->$key)) {
+				continue;
+			}
+			$template_vars['{customer_'.$key.'}'] = $customer->$key;
+		}
 
 		Mail::Send(
 			(int)$order->id_lang,
