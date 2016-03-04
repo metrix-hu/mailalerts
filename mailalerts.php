@@ -875,7 +875,7 @@ class MailAlerts extends Module
 			if(!isset($customer->$key)) {
 				continue;
 			}
-			$template_vars['{customer_'.$key.'}'] = $customer->$key;
+			$data['{customer_'.$key.'}'] = $customer->$key;
 		}
 
 		Mail::Send(
